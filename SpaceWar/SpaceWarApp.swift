@@ -9,31 +9,18 @@ import SwiftUI
 
 @main
 struct SpaceWarApp: App {
-    
-    @State private var appModel = AppModel()
-    @State private var avPlayerViewModel = AVPlayerViewModel()
-    
+
+    @State private var gameState = GameState()
+
     var body: some Scene {
         WindowGroup {
-            if avPlayerViewModel.isPlaying {
-                AVPlayerView(viewModel: avPlayerViewModel)
-            } else {
-                ContentView()
-                    .environment(appModel)
-            }
+            ContentView()
+                .environment(gameState)
         }
-        
-        ImmersiveSpace(id: appModel.immersiveSpaceID) {
+
+        ImmersiveSpace(id: "GameSpace") {
             ImmersiveView()
-                .environment(appModel)
-                .onAppear {
-                    appModel.immersiveSpaceState = .open
-                    avPlayerViewModel.play()
-                }
-                .onDisappear {
-                    appModel.immersiveSpaceState = .closed
-                    avPlayerViewModel.reset()
-                }
+                .environment(gameState)
         }
         .immersionStyle(selection: .constant(.full), in: .full)
     }
